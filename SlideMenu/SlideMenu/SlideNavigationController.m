@@ -95,15 +95,28 @@ static SlideNavigationController *singletonInstance;
     
     singletonInstance = self;
     
+    self.menuRevealAnimationDuration = MENU_SLIDE_ANIMATION_DURATION;
+    self.menuRevealAnimationOption = MENU_SLIDE_ANIMATION_OPTION;
+    self.landscapeSlideOffset = MENU_DEFAULT_SLIDE_OFFSET;
+    self.portraitSlideOffset = MENU_DEFAULT_SLIDE_OFFSET;
+//    self.panGestureSideOffset = 0;
+//    self.avoidSwitchingToSameClassViewController = YES;
+//    self.enableShadow = YES;
+//    self.enableSwipeGesture = YES;
+//    self.delegate = self;
+    
 }
 
 - (void)toggleLeftMenu
 {
+    
+    NSLog(@"toggleLeftMenu");
     [self toggleMenu:MenuLeft withCompletion:nil];
 }
 
 - (void)toggleRightMenu
 {
+    
     [self toggleMenu:MenuRight withCompletion:nil];
 }
 - (void)toggleMenu:(Menu)menu withCompletion:(void (^)())completion
@@ -247,6 +260,20 @@ static SlideNavigationController *singletonInstance;
             : rect.origin.x*-1;
         }
     }
+}
+
+- (void)setLeftMenu:(UIViewController *)leftMenu
+{
+    [_leftMenu.view removeFromSuperview];
+    
+    _leftMenu = leftMenu;
+}
+
+- (void)setRightMenu:(UIViewController *)rightMenu
+{
+    [_rightMenu.view removeFromSuperview];
+    
+    _rightMenu = rightMenu;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

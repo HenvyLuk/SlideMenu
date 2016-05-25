@@ -7,23 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SlideNavigationContorllerAnimator.h"
+#import <QuartzCore/QuartzCore.h>
+
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
+
 typedef enum{
     MenuLeft = 1,
     MenuRight = 2
 }Menu;
+@protocol SlideNavigationContorllerAnimator;
 
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+@interface SlideNavigationController : UINavigationController
 
 extern NSString  *const SlideNavigationControllerDidOpen;
 extern NSString  *const SlideNavigationControllerDidClose;
 extern NSString  *const SlideNavigationControllerDidReveal;
 
-@protocol SlideNavigationContorllerAnimator;
-
-@interface SlideNavigationController : UINavigationController
 @property (nonatomic, strong) UIViewController *rightMenu;
 @property (nonatomic, strong) UIViewController *leftMenu;
+@property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, assign) CGFloat menuRevealAnimationDuration;
 @property (nonatomic, assign) UIViewAnimationOptions menuRevealAnimationOption;
 @property (nonatomic, assign) CGFloat landscapeSlideOffset;

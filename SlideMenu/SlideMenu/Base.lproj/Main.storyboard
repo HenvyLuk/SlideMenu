@@ -8,7 +8,7 @@
         <!--Left Menu View Controller-->
         <scene sceneID="4Qk-fI-MkM">
             <objects>
-                <viewController id="tEN-uI-TUc" customClass="LeftMenuViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LeftMenuViewController" id="tEN-uI-TUc" customClass="LeftMenuViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ec4-bD-K8Q"/>
                         <viewControllerLayoutGuide type="bottom" id="sce-la-UbN"/>
@@ -24,7 +24,7 @@
             </objects>
             <point key="canvasLocation" x="-438" y="305"/>
         </scene>
-        <!--View Controller-->
+        <!--Main-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
@@ -35,9 +35,9 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="gih-B0-qWQ"/>
+                    <navigationItem key="navigationItem" title="Main" id="gih-B0-qWQ"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -47,7 +47,7 @@
         <!--Right Menu View Controller-->
         <scene sceneID="uck-6J-Wp0">
             <objects>
-                <viewController id="hN4-7h-nRy" customClass="RightMenuViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RightMenuViewController" id="hN4-7h-nRy" customClass="RightMenuViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HpD-Ed-to5"/>
                         <viewControllerLayoutGuide type="bottom" id="RSD-ow-ODe"/>

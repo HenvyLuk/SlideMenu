@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-
+#import "LeftMenuViewController.h"
+#import "RightMenuViewController.h"
+#import "SlideNavigationController.h"
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

@@ -14,6 +14,11 @@
 		5CA4649A1CF535D500B113E1 /* SlideMenu.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464981CF535D500B113E1 /* SlideMenu.xcdatamodeld */; };
 		5CA4649C1CF535D500B113E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CA4649B1CF535D500B113E1 /* Assets.xcassets */; };
 		5CA4649F1CF535D500B113E1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5CA4649D1CF535D500B113E1 /* LaunchScreen.storyboard */; };
+		5CA464A81CF5367F00B113E1 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464A71CF5367F00B113E1 /* SlideNavigationController.m */; };
+		5CA464AB1CF536CE00B113E1 /* LeftMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464AA1CF536CE00B113E1 /* LeftMenuViewController.m */; };
+		5CA464AE1CF536EA00B113E1 /* RightMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464AD1CF536EA00B113E1 /* RightMenuViewController.m */; };
+		5CA464B01CF53C2900B113E1 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 5CA464AF1CF53C2900B113E1 /* Images */; };
+		5CA464BA1CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464B91CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +33,16 @@
 		5CA4649B1CF535D500B113E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CA4649E1CF535D500B113E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5CA464A01CF535D500B113E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5CA464A61CF5367F00B113E1 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
+		5CA464A71CF5367F00B113E1 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
+		5CA464A91CF536CE00B113E1 /* LeftMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftMenuViewController.h; sourceTree = "<group>"; };
+		5CA464AA1CF536CE00B113E1 /* LeftMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftMenuViewController.m; sourceTree = "<group>"; };
+		5CA464AC1CF536EA00B113E1 /* RightMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightMenuViewController.h; sourceTree = "<group>"; };
+		5CA464AD1CF536EA00B113E1 /* RightMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightMenuViewController.m; sourceTree = "<group>"; };
+		5CA464AF1CF53C2900B113E1 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		5CA464B51CF5434400B113E1 /* SlideNavigationContorllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimator.h; sourceTree = "<group>"; };
+		5CA464B81CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlide.h; sourceTree = "<group>"; };
+		5CA464B91CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlide.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +75,7 @@
 		5CA4648B1CF535D400B113E1 /* SlideMenu */ = {
 			isa = PBXGroup;
 			children = (
+				5CA464AF1CF53C2900B113E1 /* Images */,
 				5CA4648F1CF535D400B113E1 /* AppDelegate.h */,
 				5CA464901CF535D400B113E1 /* AppDelegate.m */,
 				5CA464921CF535D400B113E1 /* ViewController.h */,
@@ -70,6 +86,15 @@
 				5CA464A01CF535D500B113E1 /* Info.plist */,
 				5CA464981CF535D500B113E1 /* SlideMenu.xcdatamodeld */,
 				5CA4648C1CF535D400B113E1 /* Supporting Files */,
+				5CA464A61CF5367F00B113E1 /* SlideNavigationController.h */,
+				5CA464A71CF5367F00B113E1 /* SlideNavigationController.m */,
+				5CA464A91CF536CE00B113E1 /* LeftMenuViewController.h */,
+				5CA464AA1CF536CE00B113E1 /* LeftMenuViewController.m */,
+				5CA464AC1CF536EA00B113E1 /* RightMenuViewController.h */,
+				5CA464AD1CF536EA00B113E1 /* RightMenuViewController.m */,
+				5CA464B51CF5434400B113E1 /* SlideNavigationContorllerAnimator.h */,
+				5CA464B81CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.h */,
+				5CA464B91CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m */,
 			);
 			path = SlideMenu;
 			sourceTree = "<group>";
@@ -139,6 +164,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CA464B01CF53C2900B113E1 /* Images in Resources */,
 				5CA4649F1CF535D500B113E1 /* LaunchScreen.storyboard in Resources */,
 				5CA4649C1CF535D500B113E1 /* Assets.xcassets in Resources */,
 				5CA464971CF535D500B113E1 /* Main.storyboard in Resources */,
@@ -152,10 +178,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CA464AE1CF536EA00B113E1 /* RightMenuViewController.m in Sources */,
 				5CA4649A1CF535D500B113E1 /* SlideMenu.xcdatamodeld in Sources */,
 				5CA464941CF535D400B113E1 /* ViewController.m in Sources */,
 				5CA464911CF535D400B113E1 /* AppDelegate.m in Sources */,
+				5CA464BA1CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m in Sources */,
 				5CA4648E1CF535D400B113E1 /* main.m in Sources */,
+				5CA464AB1CF536CE00B113E1 /* LeftMenuViewController.m in Sources */,
+				5CA464A81CF5367F00B113E1 /* SlideNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

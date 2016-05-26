@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface ViewController : UIViewController
+#import "SlideNavigationController.h"
+@interface ViewController : UIViewController <SlideNavigationControllerDelegate>
 
 
 @end

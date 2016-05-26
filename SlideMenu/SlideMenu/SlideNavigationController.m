@@ -11,7 +11,10 @@
 @interface SlideNavigationController ()
 
 @end
-
+typedef enum {
+    PopTypeAll,
+    PopTypeRoot
+} PopType;
 @implementation SlideNavigationController
 
 NSString * const SlideNavigationControllerDidOpen = @"SlideNavigationControllerDidOpen";
@@ -103,7 +106,7 @@ static SlideNavigationController *singletonInstance;
 //    self.avoidSwitchingToSameClassViewController = YES;
 //    self.enableShadow = YES;
 //    self.enableSwipeGesture = YES;
-//    self.delegate = self;
+    self.delegate = self;
     
 }
 
@@ -128,7 +131,7 @@ static SlideNavigationController *singletonInstance;
 }
 - (void)closeMenuWithCompletion:(void (^)())completion
 {
-   // [self closeMenuWithDuration:self.menuRevealAnimationDuration andCompletion:completion];
+    [self closeMenuWithDuration:self.menuRevealAnimationDuration andCompletion:completion];
 }
 
 - (void)openMenu:(Menu)menu withCompletion:(void (^)())completion
@@ -139,7 +142,7 @@ static SlideNavigationController *singletonInstance;
 {
     //[self enableTapGestureToCloseMenu:YES];
     
-    //[self prepareMenuForReveal:menu];
+    [self prepareMenuForReveal:menu];
     
     [UIView animateWithDuration:duration
                           delay:0
@@ -155,6 +158,27 @@ static SlideNavigationController *singletonInstance;
                              completion();
                          
                          [self postNotificationWithName:SlideNavigationControllerDidOpen forMenu:menu];
+                     }];
+}
+- (void)closeMenuWithDuration:(float)duration andCompletion:(void (^)())completion
+{
+    //[self enableTapGestureToCloseMenu:NO];
+    
+    Menu menu = (self.horizontalLocation > 0) ? MenuLeft : MenuRight;
+    
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:self.menuRevealAnimationOption
+                     animations:^{
+                         CGRect rect = self.view.frame;
+                         rect.origin.x = 0;
+                         [self moveHorizontallyToLocation:rect.origin.x];
+                     }
+                     completion:^(BOOL finished) {
+                         if (completion)
+                             completion();
+                         
+                         [self postNotificationWithName:SlideNavigationControllerDidClose forMenu:menu];
                      }];
 }
 
@@ -210,10 +234,12 @@ static SlideNavigationController *singletonInstance;
     NSDictionary *userInfo = @{ NOTIFICATION_USER_INFO_MENU : menuString };
     [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil userInfo:userInfo];
 }
+
 - (BOOL)isMenuOpen
 {
     return (self.horizontalLocation == 0) ? NO : YES;
 }
+
 - (CGFloat)horizontalSize
 {
     CGRect rect = self.view.frame;
@@ -261,7 +287,12 @@ static SlideNavigationController *singletonInstance;
         }
     }
 }
-
+- (void)setMenuRevealAnimator:(id<SlideNavigationContorllerAnimator>)menuRevealAnimator
+{
+    [self.menuRevealAnimator clear];
+    
+    _menuRevealAnimator = menuRevealAnimator;
+}
 - (void)setLeftMenu:(UIViewController *)leftMenu
 {
     [_leftMenu.view removeFromSuperview];
@@ -274,6 +305,279 @@ static SlideNavigationController *singletonInstance;
     [_rightMenu.view removeFromSuperview];
     
     _rightMenu = rightMenu;
+}
+
+- (void)switchToViewController:(UIViewController *)viewController
+         withSlideOutAnimation:(BOOL)slideOutAnimation
+                       popType:(PopType)poptype
+                 andCompletion:(void (^)())completion
+{
+    if (self.avoidSwitchingToSameClassViewController && [self.topViewController isKindOfClass:viewController.class])
+    {
+        [self closeMenuWithCompletion:completion];
+        return;
+    }
+    
+    void (^switchAndCallCompletion)(BOOL) = ^(BOOL closeMenuBeforeCallingCompletion) {
+        if (poptype == PopTypeAll) {
+            [self setViewControllers:@[viewController]];
+        }
+        else {
+            [super popToRootViewControllerAnimated:NO];
+            [super pushViewController:viewController animated:NO];
+        }
+        
+        if (closeMenuBeforeCallingCompletion)
+        {
+            [self closeMenuWithCompletion:^{
+                if (completion)
+                    completion();
+            }];
+        }
+        else
+        {
+            if (completion)
+                completion();
+        }
+    };
+    
+    if ([self isMenuOpen])
+    {
+        if (slideOutAnimation)
+        {
+            [UIView animateWithDuration:(slideOutAnimation) ? self.menuRevealAnimationDuration : 0
+                                  delay:0
+                                options:self.menuRevealAnimationOption
+                             animations:^{
+                                 CGFloat width = self.horizontalSize;
+                                 CGFloat moveLocation = (self.horizontalLocation> 0) ? width : -1*width;
+                                 [self moveHorizontallyToLocation:moveLocation];
+                             } completion:^(BOOL finished) {
+                                 switchAndCallCompletion(YES);
+                             }];
+        }
+        else
+        {
+            switchAndCallCompletion(YES);
+        }
+    }
+    else
+    {
+        switchAndCallCompletion(NO);
+    }
+}
+- (void)switchToViewController:(UIViewController *)viewController withCompletion:(void (^)())completion
+{
+    [self switchToViewController:viewController withSlideOutAnimation:YES popType:PopTypeRoot andCompletion:completion];
+}
+
+- (void)popToRootAndSwitchToViewController:(UIViewController *)viewController
+                     withSlideOutAnimation:(BOOL)slideOutAnimation
+                             andCompletion:(void (^)())completion
+{
+    [self switchToViewController:viewController withSlideOutAnimation:slideOutAnimation popType:PopTypeRoot andCompletion:completion];
+}
+
+- (void)popToRootAndSwitchToViewController:(UIViewController *)viewController
+                            withCompletion:(void (^)())completion
+{
+    [self switchToViewController:viewController withSlideOutAnimation:YES popType:PopTypeRoot andCompletion:completion];
+}
+
+- (void)popAllAndSwitchToViewController:(UIViewController *)viewController
+                  withSlideOutAnimation:(BOOL)slideOutAnimation
+                          andCompletion:(void (^)())completion
+{
+    [self switchToViewController:viewController withSlideOutAnimation:slideOutAnimation popType:PopTypeAll andCompletion:completion];
+}
+
+- (void)popAllAndSwitchToViewController:(UIViewController *)viewController
+                         withCompletion:(void (^)())completion
+{
+    [self switchToViewController:viewController withSlideOutAnimation:YES popType:PopTypeAll andCompletion:completion];
+}
+
+#pragma mark - Override Methods -
+
+- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
+{
+    if ([self isMenuOpen])
+    {
+        [self closeMenuWithCompletion:^{
+            [super popToRootViewControllerAnimated:animated];
+        }];
+    }
+    else
+    {
+        return [super popToRootViewControllerAnimated:animated];
+    }
+    
+    return nil;
+}
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if ([self isMenuOpen])
+    {
+        [self closeMenuWithCompletion:^{
+            [super pushViewController:viewController animated:animated];
+        }];
+    }
+    else
+    {
+        [super pushViewController:viewController animated:animated];
+    }
+}
+
+- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if ([self isMenuOpen])
+    {
+        [self closeMenuWithCompletion:^{
+            [super popToViewController:viewController animated:animated];
+        }];
+    }
+    else
+    {
+        return [super popToViewController:viewController animated:animated];
+    }
+    
+    return nil;
+}
+
+#pragma mark - Private Methods -
+
+- (void)updateMenuFrameAndTransformAccordingToOrientation
+{
+    // Animate rotatation when menu is open and device rotates
+    CGAffineTransform transform = self.view.transform;
+    self.leftMenu.view.transform = transform;
+    self.rightMenu.view.transform = transform;
+    
+    self.leftMenu.view.frame = [self initialRectForMenu];
+    self.rightMenu.view.frame = [self initialRectForMenu];
+}
+- (CGRect)initialRectForMenu
+{
+    CGRect rect = self.view.frame;
+    rect.origin.x = 0;
+    rect.origin.y = 0;
+    
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+    {
+        return rect;
+    }
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    if (UIInterfaceOrientationIsLandscape(orientation))
+    {
+        // For some reasons in landscape below the status bar is considered y=0, but in portrait it's considered y=20
+        rect.origin.x = (orientation == UIInterfaceOrientationLandscapeRight) ? 0 : STATUS_BAR_HEIGHT;
+        rect.size.width = self.view.frame.size.width-STATUS_BAR_HEIGHT;
+    }
+    else
+    {
+        // For some reasons in landscape below the status bar is considered y=0, but in portrait it's considered y=20
+        rect.origin.y = (orientation == UIInterfaceOrientationPortrait) ? STATUS_BAR_HEIGHT : 0;
+        rect.size.height = self.view.frame.size.height-STATUS_BAR_HEIGHT;
+    }
+    
+    return rect;
+}
+- (UIBarButtonItem *)barButtonItemForMenu:(Menu)menu
+{
+    SEL selector = (menu == MenuLeft) ? @selector(leftMenuSelected:) : @selector(righttMenuSelected:);
+    UIBarButtonItem *customButton = (menu == MenuLeft) ? self.leftBarButtonItem : self.rightBarButtonItem;
+    
+    if (customButton)
+    {
+        customButton.action = selector;
+        customButton.target = self;
+        return customButton;
+    }
+    else
+    {
+        UIImage *image = [UIImage imageNamed:MENU_IMAGE];
+        return [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:selector];
+    }
+}
+- (BOOL)shouldDisplayMenu:(Menu)menu forViewController:(UIViewController *)vc
+{
+    if (menu == MenuRight)
+    {
+        if ([vc respondsToSelector:@selector(slideNavigationControllerShouldDisplayRightMenu)] &&
+            [(UIViewController<SlideNavigationControllerDelegate> *)vc slideNavigationControllerShouldDisplayRightMenu])
+        {
+            return YES;
+        }
+    }
+    if (menu == MenuLeft)
+    {
+        if ([vc respondsToSelector:@selector(slideNavigationControllerShouldDisplayLeftMenu)] &&
+            [(UIViewController<SlideNavigationControllerDelegate> *)vc slideNavigationControllerShouldDisplayLeftMenu])
+        {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (void)prepareMenuForReveal:(Menu)menu
+{
+    // Only prepare menu if it has changed (ex: from MenuLeft to MenuRight or vice versa)
+    if (self.lastRevealedMenu && menu == self.lastRevealedMenu)
+        return;
+    
+    UIViewController *menuViewController = (menu == MenuLeft) ? self.leftMenu : self.rightMenu;
+    UIViewController *removingMenuViewController = (menu == MenuLeft) ? self.rightMenu : self.leftMenu;
+    
+    self.lastRevealedMenu = menu;
+    
+    [removingMenuViewController.view removeFromSuperview];
+    [self.view.window insertSubview:menuViewController.view atIndex:0];
+    
+    [self updateMenuFrameAndTransformAccordingToOrientation];
+    
+    [self.menuRevealAnimator prepareMenuForAnimation:menu];
+}
+
+
+#pragma mark - IBActions -
+
+- (void)leftMenuSelected:(id)sender
+{
+    
+    NSLog(@"leftMenuSelected");
+    if ([self isMenuOpen])
+        [self closeMenuWithCompletion:nil];
+    else
+        [self openMenu:MenuLeft withCompletion:nil];
+}
+
+- (void)righttMenuSelected:(id)sender
+{
+    if ([self isMenuOpen])
+        [self closeMenuWithCompletion:nil];
+    else
+        [self openMenu:MenuRight withCompletion:nil];
+}
+#pragma mark - UINavigationControllerDelegate Methods -
+
+- (void)navigationController:(UINavigationController *)navigationController
+      willShowViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated
+{
+    
+   
+    if ([self shouldDisplayMenu:MenuLeft forViewController:viewController])
+         NSLog(@"UINavigationControllerDelegate");
+        viewController.navigationItem.leftBarButtonItem = [self barButtonItemForMenu:MenuLeft];
+    
+    if ([self shouldDisplayMenu:MenuRight forViewController:viewController])
+         NSLog(@"UINavigationControllerDelegate");
+        viewController.navigationItem.rightBarButtonItem = [self barButtonItemForMenu:MenuRight];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -11,7 +11,11 @@
 
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-
+@protocol SlideNavigationControllerDelegate <NSObject>
+@optional
+- (BOOL)slideNavigationControllerShouldDisplayRightMenu;
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu;
+@end
 
 typedef enum{
     MenuLeft = 1,
@@ -19,7 +23,7 @@ typedef enum{
 }Menu;
 @protocol SlideNavigationContorllerAnimator;
 
-@interface SlideNavigationController : UINavigationController
+@interface SlideNavigationController : UINavigationController <UINavigationControllerDelegate>
 
 extern NSString  *const SlideNavigationControllerDidOpen;
 extern NSString  *const SlideNavigationControllerDidClose;
@@ -27,6 +31,7 @@ extern NSString  *const SlideNavigationControllerDidReveal;
 
 @property (nonatomic, strong) UIViewController *rightMenu;
 @property (nonatomic, strong) UIViewController *leftMenu;
+@property (nonatomic, assign) Menu lastRevealedMenu;
 @property (nonatomic, strong) UIBarButtonItem *leftBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, assign) CGFloat menuRevealAnimationDuration;
@@ -34,10 +39,26 @@ extern NSString  *const SlideNavigationControllerDidReveal;
 @property (nonatomic, assign) CGFloat landscapeSlideOffset;
 @property (nonatomic, assign) CGFloat portraitSlideOffset;
 @property (nonatomic, strong) id <SlideNavigationContorllerAnimator> menuRevealAnimator;
+@property (nonatomic, assign) BOOL avoidSwitchingToSameClassViewController;
+@property (nonatomic, assign) BOOL menuNeedsLayout;
 
 + (SlideNavigationController *)sharedInstance;
 
 - (void)toggleLeftMenu;
 
 - (void)toggleRightMenu;
+
+- (void)openMenu:(Menu)menu withCompletion:(void (^)())completion;
+
+- (void)closeMenuWithCompletion:(void (^)())completion;
+
+- (void)switchToViewController:(UIViewController *)viewController withCompletion:(void (^)())completion __deprecated;
+
+- (void)popToRootAndSwitchToViewController:(UIViewController *)viewController withSlideOutAnimation:(BOOL)slideOutAnimation andCompletion:(void (^)())completion;
+
+- (void)popToRootAndSwitchToViewController:(UIViewController *)viewController withCompletion:(void (^)())completion;
+
+- (void)popAllAndSwitchToViewController:(UIViewController *)viewController withSlideOutAnimation:(BOOL)slideOutAnimation andCompletion:(void (^)())completion;
+
+- (void)popAllAndSwitchToViewController:(UIViewController *)viewController withCompletion:(void (^)())completion;
 @end

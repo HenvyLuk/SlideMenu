@@ -17,7 +17,6 @@
 		5CA464A81CF5367F00B113E1 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464A71CF5367F00B113E1 /* SlideNavigationController.m */; };
 		5CA464AB1CF536CE00B113E1 /* LeftMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464AA1CF536CE00B113E1 /* LeftMenuViewController.m */; };
 		5CA464AE1CF536EA00B113E1 /* RightMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464AD1CF536EA00B113E1 /* RightMenuViewController.m */; };
-		5CA464B01CF53C2900B113E1 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 5CA464AF1CF53C2900B113E1 /* Images */; };
 		5CA464BA1CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA464B91CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +38,6 @@
 		5CA464AA1CF536CE00B113E1 /* LeftMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftMenuViewController.m; sourceTree = "<group>"; };
 		5CA464AC1CF536EA00B113E1 /* RightMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightMenuViewController.h; sourceTree = "<group>"; };
 		5CA464AD1CF536EA00B113E1 /* RightMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightMenuViewController.m; sourceTree = "<group>"; };
-		5CA464AF1CF53C2900B113E1 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
 		5CA464B51CF5434400B113E1 /* SlideNavigationContorllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimator.h; sourceTree = "<group>"; };
 		5CA464B81CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlide.h; sourceTree = "<group>"; };
 		5CA464B91CF5447E00B113E1 /* SlideNavigationContorllerAnimatorSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlide.m; sourceTree = "<group>"; };
@@ -75,7 +73,6 @@
 		5CA4648B1CF535D400B113E1 /* SlideMenu */ = {
 			isa = PBXGroup;
 			children = (
-				5CA464AF1CF53C2900B113E1 /* Images */,
 				5CA4648F1CF535D400B113E1 /* AppDelegate.h */,
 				5CA464901CF535D400B113E1 /* AppDelegate.m */,
 				5CA464921CF535D400B113E1 /* ViewController.h */,
@@ -164,7 +161,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CA464B01CF53C2900B113E1 /* Images in Resources */,
 				5CA4649F1CF535D500B113E1 /* LaunchScreen.storyboard in Resources */,
 				5CA4649C1CF535D500B113E1 /* Assets.xcassets in Resources */,
 				5CA464971CF535D500B113E1 /* Main.storyboard in Resources */,
@@ -336,6 +332,7 @@
 				5CA464A51CF535D500B113E1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Left Menu View Controller-->
@@ -16,7 +17,30 @@
                     <view key="view" contentMode="scaleToFill" id="mje-dq-6y0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="leftMenu" translatesAutoresizingMaskIntoConstraints="NO" id="GE5-HU-iLj">
+                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="GE5-HU-iLj" secondAttribute="trailing" id="GvD-Rf-ygB"/>
+                            <constraint firstItem="GE5-HU-iLj" firstAttribute="leading" secondItem="mje-dq-6y0" secondAttribute="leadingMargin" id="ItD-c0-Rjs"/>
+                            <constraint firstAttribute="trailing" secondItem="GE5-HU-iLj" secondAttribute="trailing" id="KNa-43-D9p"/>
+                            <constraint firstItem="GE5-HU-iLj" firstAttribute="leading" secondItem="mje-dq-6y0" secondAttribute="leading" id="LJa-7J-pcN"/>
+                            <constraint firstItem="sce-la-UbN" firstAttribute="top" secondItem="GE5-HU-iLj" secondAttribute="bottom" id="UQY-Ij-rCp"/>
+                            <constraint firstAttribute="trailing" secondItem="GE5-HU-iLj" secondAttribute="trailing" id="YPl-Bg-yr6"/>
+                            <constraint firstItem="GE5-HU-iLj" firstAttribute="top" secondItem="Ec4-bD-K8Q" secondAttribute="bottom" id="nJC-af-7uH"/>
+                            <constraint firstItem="GE5-HU-iLj" firstAttribute="leading" secondItem="mje-dq-6y0" secondAttribute="leading" id="p3A-UT-R6O"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="GvD-Rf-ygB"/>
+                                <exclude reference="ItD-c0-Rjs"/>
+                                <exclude reference="KNa-43-D9p"/>
+                                <exclude reference="LJa-7J-pcN"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                 </viewController>
@@ -64,7 +88,18 @@
                     <view key="view" contentMode="scaleToFill" id="zCP-Im-F7q">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rightMenu" translatesAutoresizingMaskIntoConstraints="NO" id="T6T-Ie-Gl2">
+                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="T6T-Ie-Gl2" firstAttribute="top" secondItem="HpD-Ed-to5" secondAttribute="bottom" id="7Qx-id-OgJ"/>
+                            <constraint firstItem="RSD-ow-ODe" firstAttribute="top" secondItem="T6T-Ie-Gl2" secondAttribute="bottom" id="AaB-ut-PII"/>
+                            <constraint firstItem="T6T-Ie-Gl2" firstAttribute="leading" secondItem="zCP-Im-F7q" secondAttribute="leading" id="XFb-WZ-G4V"/>
+                            <constraint firstAttribute="trailing" secondItem="T6T-Ie-Gl2" secondAttribute="trailing" id="pY8-Js-TJz"/>
+                        </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                 </viewController>
@@ -121,4 +156,8 @@
             <point key="canvasLocation" x="601" y="305"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="leftMenu" width="1040" height="1526"/>
+        <image name="rightMenu" width="640" height="1136"/>
+    </resources>
 </document>

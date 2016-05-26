@@ -41,6 +41,12 @@ extern NSString  *const SlideNavigationControllerDidReveal;
 @property (nonatomic, strong) id <SlideNavigationContorllerAnimator> menuRevealAnimator;
 @property (nonatomic, assign) BOOL avoidSwitchingToSameClassViewController;
 @property (nonatomic, assign) BOOL menuNeedsLayout;
+@property (nonatomic, assign) BOOL enableSwipeGesture;
+@property (nonatomic, assign) BOOL enableShadow;
+@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
+@property (nonatomic, assign) CGPoint draggingPoint;
+@property (nonatomic, assign) CGFloat panGestureSideOffset;
 
 + (SlideNavigationController *)sharedInstance;
 

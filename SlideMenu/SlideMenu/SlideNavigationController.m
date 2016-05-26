@@ -8,7 +8,7 @@
 
 #import "SlideNavigationController.h"
 #import "SlideNavigationContorllerAnimator.h"
-@interface SlideNavigationController ()
+@interface SlideNavigationController ()<UIGestureRecognizerDelegate>
 
 @end
 typedef enum {
@@ -102,14 +102,182 @@ static SlideNavigationController *singletonInstance;
     self.menuRevealAnimationOption = MENU_SLIDE_ANIMATION_OPTION;
     self.landscapeSlideOffset = MENU_DEFAULT_SLIDE_OFFSET;
     self.portraitSlideOffset = MENU_DEFAULT_SLIDE_OFFSET;
-//    self.panGestureSideOffset = 0;
+    self.panGestureSideOffset = 0;
 //    self.avoidSwitchingToSameClassViewController = YES;
-//    self.enableShadow = YES;
-//    self.enableSwipeGesture = YES;
+    self.enableShadow = YES;
+    self.enableSwipeGesture = YES;
     self.delegate = self;
     
 }
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    self.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.view.bounds].CGPath;
+    
+    [self enableTapGestureToCloseMenu:NO];
+    
+    
+}
+- (void)enableTapGestureToCloseMenu:(BOOL)enable
+{
+    if (enable)
+    {
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+            self.interactivePopGestureRecognizer.enabled = NO;
+        
+        self.topViewController.view.userInteractionEnabled = NO;
+        [self.view addGestureRecognizer:self.tapRecognizer];
+    }
+    else
+    {
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+            self.interactivePopGestureRecognizer.enabled = YES;
+        
+        self.topViewController.view.userInteractionEnabled = YES;
+        [self.view removeGestureRecognizer:self.tapRecognizer];
+    }
+}
+#pragma mark - Gesture Recognizing -
 
+- (void)setEnableSwipeGesture:(BOOL)markEnableSwipeGesture
+{
+    _enableSwipeGesture = markEnableSwipeGesture;
+    
+    if (_enableSwipeGesture)
+    {
+        [self.view addGestureRecognizer:self.panRecognizer];
+    }
+    else
+    {
+        [self.view removeGestureRecognizer:self.panRecognizer];
+    }
+}
+
+- (void)tapDetected:(UITapGestureRecognizer *)tapRecognizer
+{
+    [self closeMenuWithCompletion:nil];
+}
+- (UITapGestureRecognizer *)tapRecognizer
+{
+    if (!_tapRecognizer)
+    {
+        _tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDetected:)];
+    }
+    
+    return _tapRecognizer;
+}
+- (UIPanGestureRecognizer *)panRecognizer
+{
+    if (!_panRecognizer)
+    {
+        _panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDetected:)];
+        _panRecognizer.delegate = self;
+    }
+    
+    return _panRecognizer;
+}
+- (void)panDetected:(UIPanGestureRecognizer *)aPanRecognizer
+{
+    CGPoint translation = [aPanRecognizer translationInView:aPanRecognizer.view];
+    CGPoint velocity = [aPanRecognizer velocityInView:aPanRecognizer.view];
+    NSInteger movement = translation.x - self.draggingPoint.x;
+    
+    Menu currentMenu;
+    
+    if (self.horizontalLocation > 0)
+        currentMenu = MenuLeft;
+    else if (self.horizontalLocation < 0)
+        currentMenu = MenuRight;
+    else
+        currentMenu = (translation.x > 0) ? MenuLeft : MenuRight;
+    
+    if (![self shouldDisplayMenu:currentMenu forViewController:self.topViewController])
+        return;
+    
+    [self prepareMenuForReveal:currentMenu];
+    
+    if (aPanRecognizer.state == UIGestureRecognizerStateBegan)
+    {
+        self.draggingPoint = translation;
+    }
+    else if (aPanRecognizer.state == UIGestureRecognizerStateChanged)
+    {
+        static CGFloat lastHorizontalLocation = 0;
+        CGFloat newHorizontalLocation = [self horizontalLocation];
+        lastHorizontalLocation = newHorizontalLocation;
+        newHorizontalLocation += movement;
+        
+        if (newHorizontalLocation >= self.minXForDragging && newHorizontalLocation <= self.maxXForDragging)
+            [self moveHorizontallyToLocation:newHorizontalLocation];
+        
+        self.draggingPoint = translation;
+    }
+    else if (aPanRecognizer.state == UIGestureRecognizerStateEnded)
+    {
+        NSInteger currentX = [self horizontalLocation];
+        NSInteger currentXOffset = (currentX > 0) ? currentX : currentX * -1;
+        NSInteger positiveVelocity = (velocity.x > 0) ? velocity.x : velocity.x * -1;
+        
+        // If the speed is high enough follow direction
+        if (positiveVelocity >= MENU_FAST_VELOCITY_FOR_SWIPE_FOLLOW_DIRECTION)
+        {
+            Menu menu = (velocity.x > 0) ? MenuLeft : MenuRight;
+            
+            // Moving Right
+            if (velocity.x > 0)
+            {
+                if (currentX > 0)
+                {
+                    if ([self shouldDisplayMenu:menu forViewController:self.visibleViewController])
+                        [self openMenu:(velocity.x > 0) ? MenuLeft : MenuRight withDuration:MENU_QUICK_SLIDE_ANIMATION_DURATION andCompletion:nil];
+                }
+                else
+                {
+                    [self closeMenuWithDuration:MENU_QUICK_SLIDE_ANIMATION_DURATION andCompletion:nil];
+                }
+            }
+            // Moving Left
+            else
+            {
+                if (currentX > 0)
+                {
+                    [self closeMenuWithDuration:MENU_QUICK_SLIDE_ANIMATION_DURATION andCompletion:nil];
+                }
+                else
+                {
+                    if ([self shouldDisplayMenu:menu forViewController:self.visibleViewController])
+                        [self openMenu:(velocity.x > 0) ? MenuLeft : MenuRight withDuration:MENU_QUICK_SLIDE_ANIMATION_DURATION andCompletion:nil];
+                }
+            }
+        }
+        else
+        {
+            if (currentXOffset < (self.horizontalSize - self.slideOffset)/2)
+                [self closeMenuWithCompletion:nil];
+            else
+                [self openMenu:(currentX > 0) ? MenuLeft : MenuRight withCompletion:nil];
+        }
+    }
+}
+
+- (NSInteger)minXForDragging
+{
+    if ([self shouldDisplayMenu:MenuRight forViewController:self.topViewController])
+    {
+        return (self.horizontalSize - self.slideOffset)  * -1;
+    }
+    
+    return 0;
+}
+
+- (NSInteger)maxXForDragging
+{
+    if ([self shouldDisplayMenu:MenuLeft forViewController:self.topViewController])
+    {
+        return self.horizontalSize - self.slideOffset;
+    }
+    
+    return 0;
+}
 - (void)toggleLeftMenu
 {
     
@@ -140,7 +308,7 @@ static SlideNavigationController *singletonInstance;
 }
 - (void)openMenu:(Menu)menu withDuration:(float)duration andCompletion:(void (^)())completion
 {
-    //[self enableTapGestureToCloseMenu:YES];
+    [self enableTapGestureToCloseMenu:YES];
     
     [self prepareMenuForReveal:menu];
     
@@ -162,7 +330,7 @@ static SlideNavigationController *singletonInstance;
 }
 - (void)closeMenuWithDuration:(float)duration andCompletion:(void (^)())completion
 {
-    //[self enableTapGestureToCloseMenu:NO];
+    [self enableTapGestureToCloseMenu:NO];
     
     Menu menu = (self.horizontalLocation > 0) ? MenuLeft : MenuRight;
     
@@ -265,6 +433,7 @@ static SlideNavigationController *singletonInstance;
 - (CGFloat)horizontalLocation
 {
     CGRect rect = self.view.frame;
+    NSLog(@"%f??????",rect.origin.x);
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
@@ -287,25 +456,25 @@ static SlideNavigationController *singletonInstance;
         }
     }
 }
-- (void)setMenuRevealAnimator:(id<SlideNavigationContorllerAnimator>)menuRevealAnimator
-{
-    [self.menuRevealAnimator clear];
-    
-    _menuRevealAnimator = menuRevealAnimator;
-}
-- (void)setLeftMenu:(UIViewController *)leftMenu
-{
-    [_leftMenu.view removeFromSuperview];
-    
-    _leftMenu = leftMenu;
-}
-
-- (void)setRightMenu:(UIViewController *)rightMenu
-{
-    [_rightMenu.view removeFromSuperview];
-    
-    _rightMenu = rightMenu;
-}
+//- (void)setMenuRevealAnimator:(id<SlideNavigationContorllerAnimator>)menuRevealAnimator
+//{
+//    [self.menuRevealAnimator clear];
+//    
+//    _menuRevealAnimator = menuRevealAnimator;
+//}
+//- (void)setLeftMenu:(UIViewController *)leftMenu
+//{
+//    [_leftMenu.view removeFromSuperview];
+//    
+//    _leftMenu = leftMenu;
+//}
+//
+//- (void)setRightMenu:(UIViewController *)rightMenu
+//{
+//    [_rightMenu.view removeFromSuperview];
+//    
+//    _rightMenu = rightMenu;
+//}
 
 - (void)switchToViewController:(UIViewController *)viewController
          withSlideOutAnimation:(BOOL)slideOutAnimation
@@ -572,11 +741,11 @@ static SlideNavigationController *singletonInstance;
     
    
     if ([self shouldDisplayMenu:MenuLeft forViewController:viewController])
-         NSLog(@"UINavigationControllerDelegate");
+       
         viewController.navigationItem.leftBarButtonItem = [self barButtonItemForMenu:MenuLeft];
     
     if ([self shouldDisplayMenu:MenuRight forViewController:viewController])
-         NSLog(@"UINavigationControllerDelegate");
+        
         viewController.navigationItem.rightBarButtonItem = [self barButtonItemForMenu:MenuRight];
 }
 - (void)didReceiveMemoryWarning {
